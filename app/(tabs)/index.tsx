@@ -1,14 +1,34 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
+import * as Location from 'expo-location';
+import { useWeather } from '../../hooks/useWeather';
+import { useContext } from 'react';
+import MainScreen from '../../screens/MainScreen';
+import LoadingIndicator from '../../components/LoadingIndicator';
+import { LocationContext } from '../../context/LocationContext';
 
 export default function TabOneScreen() {
+  const { city, locationLoaded } = useContext(LocationContext);
+  const { weather, forecast, loading, error, refresh } = useWeather(
+    city || 'Москва',
+  );
+
+  useEffect(() => {
+    if (city) refresh();
+  }, [city]);
+
+  if (loading || !locationLoaded) return <LoadingIndicator />;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      {city && (
+        <MainScreen
+          weather={weather}
+          forecast={forecast}
+          city={city}
+          onRefresh={refresh}
+        />
+      )}
     </View>
   );
 }
@@ -16,16 +36,5 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
 });
