@@ -3,18 +3,19 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import ForecastChart from '../components/ForecastChart';
 import WeatherHistoryCards from '../components/WeatherHistoryCards';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useGradient } from '../context/GradientContext'; // путь подкорректируй при необходимости
+import { useGradient } from '../context/GradientContext';
+import HourlyForecastChart from '../components/HourlyForecastChart';
 
-const ForecastScreen = ({ weatherHistory, forecast }) => {
+const ForecastScreen = ({ weatherHistory, forecast , hourlyForecast }) => {
   const gradient = useGradient();
 
   return (
     <LinearGradient colors={gradient} style={styles.gradient}>
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Text style={styles.header}>Погода</Text>
-          <WeatherHistoryCards weatherHistory={weatherHistory} />
+          <HourlyForecastChart hourlyForecast={hourlyForecast} />
           <ForecastChart forecast={forecast} />
+          <WeatherHistoryCards weatherHistory={weatherHistory} />
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   scrollContainer: {
-    padding: 16,
+    padding: 20,
   },
   header: {
     fontSize: 28,

@@ -88,12 +88,12 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
         <Text style={styles.condition}>{weather.condition.text}</Text>
 
         <View style={styles.detailsContainer}>
-          <WeatherDetail
-            icon="weather-windy"
-            title="Ветер"
-            value={`${weather.wind_kph} км/ч`}
-            description={weather.wind_dir}
-          />
+           <WeatherDetail
+             icon="weather-windy"
+             title="Ветер"
+             value={`${weather.wind_kph} км/ч`}
+             description={getWindDirection(weather.wind_dir)}
+           />
           <WeatherDetail
             icon="water-percent"
             title="Влажность"
@@ -258,6 +258,29 @@ const getUVStatus = (uv: number) => {
   if (uv < 6) return 'Умеренный';
   if (uv < 8) return 'Высокий';
   return 'Очень высокий';
+};
+
+const getWindDirection = (dir: string) => {
+  const directions: { [key: string]: string } = {
+    N: 'Северный',
+    NNE: 'Северо-северо-восточный',
+    NE: 'Северо-восточный',
+    ENE: 'Восточно-северо-восточный',
+    E: 'Восточный',
+    ESE: 'Восточно-юго-восточный',
+    SE: 'Юго-восточный',
+    SSE: 'Юго-юго-восточный',
+    S: 'Южный',
+    SSW: 'Юго-юго-западный',
+    SW: 'Юго-западный',
+    WSW: 'Западно-юго-западный',
+    W: 'Западный',
+    WNW: 'Западно-северо-западный',
+    NW: 'Северо-западный',
+    NNW: 'Северо-северо-западный',
+  };
+
+  return directions[dir] || dir;
 };
 
 export default WeatherMainScreen;

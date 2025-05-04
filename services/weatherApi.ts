@@ -123,3 +123,45 @@ export async function getForecast(params: ForecastParams): Promise<WeatherDay[]>
     return [];
   }
 }
+
+
+export const fetchHourlyForecast = async (
+  city: string
+): Promise<HourlyForecastItem[]> => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/forecast.json`, {
+      params: {
+        key: WEATHER_API_KEY,
+        q: city,
+        lang: 'ru',
+        days: 2,
+        aqi: 'no',
+        alerts: 'no',
+      },
+    });
+
+    const allHours: HourlyForecastItem[] = [
+      ...data.forecast.forecastday[0].hour,
+      ...data.forecast.forecastday[1].hour,
+    ];
+
+    const currentHour = new Date().getHours();
+
+    const nowDate = new Date().toISOString().split('T')[0];
+
+    const now = new Date();
+    const nowISO = now.toISOString().slice(0, 13);
+
+    // Фильтруем только 24 часа, начиная с текущего
+    const result = allHours
+      .filter((hour) => {
+        const hourISO = new Date(hour.time).toISOString().slice(0, 13);
+        return hourISO >= nowISO;
+      })
+      .slice(0, 24);
+
+    return result;
+  } catch (error) {
+    throw new Error('Не удалось получить почасовой прогноз погоды');
+  }
+};

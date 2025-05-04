@@ -43,7 +43,8 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
   const allTemps = [...maxTemps, ...minTemps];
   const yMin = Math.floor(Math.min(...allTemps)) - 1;
   const yMax = Math.ceil(Math.max(...allTemps)) + 1;
-  const chartWidth = Math.max(SCREEN_WIDTH, forecast.length * 60);
+  const chartWidth = Math.max(SCREEN_WIDTH, forecast.length * 70);
+
 
   const CombinedLinesAndLabels = ({ x, y }: any) => (
     <G>
@@ -171,9 +172,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 15,
     paddingHorizontal: 5,
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
-    marginBottom: 24,
   },
 });
 

@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const CARD_GAP = 12;
-const CARD_WIDTH = (SCREEN_WIDTH - CARD_GAP * 4) / 3;
+const { width } = Dimensions.get('window');
 
 const WeatherHistoryCards = ({ weatherHistory }) => {
   return (
@@ -26,7 +24,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 12,
-    color: '#fff', // Цвет шрифта в соответствии с дизайном
+    color: '#fff',
   },
   cardRow: {
     flexDirection: 'row',
@@ -34,15 +32,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Полупрозрачный фон как на MainScreen
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     paddingVertical: 10,
     paddingHorizontal: 5,
-    width: CARD_WIDTH,
+    width: width * 0.28,
     alignItems: 'center',
+    justifyContent: 'flex-start',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)', // Добавим стиль, как на MainScreen
-    justifyContent: 'flex-start', // Контент внутри карточки выравнивается по верху
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   cardDate: {
     fontSize: 14,
