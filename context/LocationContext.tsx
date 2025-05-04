@@ -31,7 +31,7 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
           setLatitude(55.7558);
           setLongitude(37.6173);
         } else {
-          const loc = await Location.getCurrentPositionAsync({});
+          const loc = await Location.getLastKnownPositionAsync({});
           setLatitude(loc.coords.latitude);
           setLongitude(loc.coords.longitude);
           const response = await fetch(

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { CurrentWeatherResponse, ForecastDay } from '../services/weatherApi';
+import { useGradient } from '../context/GradientContext';
 
 const { width } = Dimensions.get('window');
 
@@ -29,6 +30,7 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
   onRefresh,
 }) => {
   const [refreshing, setRefreshing] = useState(false);
+  const gradient = useGradient();
 
   const handleRefresh = async () => {
     try {
@@ -37,26 +39,6 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
     } finally {
       setRefreshing(false);
     }
-  };
-
-  const gradients = useMemo(
-    () => ({
-      clear: ['#47b2ff', '#6c8ef5'],
-      cloudy: ['#5d6d7e', '#839192'],
-      rain: ['#2c3e50', '#3498db'],
-      snow: ['#a8c0ff', '#3f2b96'],
-      default: ['#1e3799', '#4a69bd'],
-    }),
-    [],
-  );
-
-  const getGradient = () => {
-    const condition = weather?.condition?.text?.toLowerCase() || '';
-    if (condition.includes('ясно')) return gradients.clear;
-    if (condition.includes('дождь')) return gradients.rain;
-    if (condition.includes('снег')) return gradients.snow;
-    if (condition.includes('облач')) return gradients.cloudy;
-    return gradients.default;
   };
 
   if (!weather) {
@@ -69,7 +51,7 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
 
   return (
     <LinearGradient
-      colors={getGradient()}
+      colors={gradient}
       style={styles.container}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -85,7 +67,6 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
           />
         }
       >
-        {/* Шапка с городом и временем */}
         <View style={styles.header}>
           <Text style={styles.city}>{city}</Text>
           <Text style={styles.time}>
@@ -96,7 +77,6 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
           </Text>
         </View>
 
-        {/* Основная информация о погоде */}
         <View style={styles.mainInfo}>
           <Text style={styles.temperature}>{Math.round(weather.temp_c)}°</Text>
           <Image
@@ -105,10 +85,8 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
           />
         </View>
 
-        {/* Состояние погоды */}
         <Text style={styles.condition}>{weather.condition.text}</Text>
 
-        {/* Детализированная информация */}
         <View style={styles.detailsContainer}>
           <WeatherDetail
             icon="weather-windy"
@@ -153,7 +131,6 @@ const WeatherMainScreen: React.FC<WeatherMainScreenProps> = ({
   );
 };
 
-// Компонент деталей погоды
 const WeatherDetail: React.FC<{
   icon: string;
   title: string;
@@ -172,28 +149,6 @@ const WeatherDetail: React.FC<{
   </View>
 );
 
-// Компонент прогноза на день
-const ForecastItem: React.FC<{
-  date: string;
-  icon: string;
-  temp: number;
-  condition: string;
-}> = ({ date, icon, temp, condition }) => (
-  <View style={styles.forecastItem}>
-    <Text style={styles.forecastDate}>
-      {new Date(date)
-        .toLocaleDateString('ru-RU', {
-          weekday: 'short',
-        })
-        .replace('.', '')}
-    </Text>
-    <Image source={{ uri: `https:${icon}` }} style={styles.forecastIcon} />
-    <Text style={styles.forecastTemp}>{Math.round(temp)}°</Text>
-    <Text style={styles.forecastCondition}>{condition.split(' ')[0]}</Text>
-  </View>
-);
-
-// Стили
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -211,7 +166,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   city: {
     fontSize: 32,
@@ -257,70 +212,33 @@ const styles = StyleSheet.create({
   detailCard: {
     backgroundColor: 'rgba(255,255,255,0.15)',
     borderRadius: 15,
-    padding: 15,
+    padding: 10,
     width: width * 0.28,
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    minHeight: 120,
   },
   detailTitle: {
     color: 'white',
     fontSize: 14,
     marginVertical: 5,
     fontWeight: '500',
+    textAlign: 'center',
   },
   detailValue: {
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
+    textAlign: 'center',
   },
   detailDescription: {
     color: 'rgba(255,255,255,0.8)',
     fontSize: 12,
     marginTop: 3,
-  },
-  forecastTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  forecastContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 30,
-  },
-  forecastItem: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 12,
-    padding: 10,
-    width: width * 0.28,
-  },
-  forecastDate: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '500',
-    textTransform: 'uppercase',
-  },
-  forecastIcon: {
-    width: 50,
-    height: 50,
-    marginVertical: 8,
-  },
-  forecastTemp: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  forecastCondition: {
-    color: 'rgba(255,255,255,0.8)',
-    fontSize: 12,
-    marginTop: 4,
     textAlign: 'center',
   },
 });
 
-// Вспомогательные функции
 const getHumidityStatus = (humidity: number) => {
   if (humidity < 40) return 'Сухо';
   if (humidity < 70) return 'Комфортно';
