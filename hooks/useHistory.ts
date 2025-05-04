@@ -36,7 +36,6 @@ export const useHistory = (latitude: number, longitude: number) => {
         };
 
         const data = await getForecast(params);
-        console.log('Полученные данные:', data);
         setHistory(data);
       } catch (err) {
         setError('Ошибка при получении данных');

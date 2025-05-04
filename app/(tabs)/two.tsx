@@ -8,16 +8,18 @@ import LoadingIndicator from '../../components/LoadingIndicator';
 import { LocationContext } from '../../context/LocationContext';
 import { useHistory } from '../../hooks/useHistory';
 import { fetchWeatherApi } from 'openmeteo';
-
+import { useForecast } from '../../hooks/useForecast';
 
 export default function TabTwoScreen() {
   const { city, latitude, longitude, locationLoaded } = useContext(LocationContext);
   const { history, loading} = useHistory(latitude, longitude);
+  const { forecast, loadingForecast } = useForecast(city);
 
-   if (loading || !locationLoaded) return <LoadingIndicator />;
+    console.log(forecast);
+   if (loading || !locationLoaded || loadingForecast) return <LoadingIndicator />;
   return (
     <View style={styles.container}>
-    <ForecastScreen weatherHistory={history}> </ForecastScreen>
+    <ForecastScreen weatherHistory={history} forecast={forecast}> </ForecastScreen>
     </View>
   );
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import ForecastChart from '../components/ForecastChart';
 
-const ForecastScreen = ({ weatherHistory }) => {
+const ForecastScreen = ({ weatherHistory, forecast }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -12,10 +13,11 @@ const ForecastScreen = ({ weatherHistory }) => {
           {weatherHistory.map((item, index) => (
             <View key={index} style={styles.card}>
               <Text style={styles.cardDate}>{item.date}</Text>
-              <Text style={styles.cardTemp}>{item.maxTemp}°C</Text>
+              <Text style={styles.cardTemp}>{Math.round(item.maxTemp)}°C</Text>
             </View>
           ))}
         </View>
+        <ForecastChart forecast={forecast} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
  card: {
-   backgroundColor: 'rgba(30, 64, 175, 0.1)', // теперь 10% непрозрачности
+   backgroundColor: 'rgba(0, 0, 0, 0.05)',
    borderRadius: 16,
    paddingVertical: 20,
    paddingHorizontal: 10,

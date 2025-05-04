@@ -27,7 +27,6 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
           console.warn('Нет разрешения');
-          // По умолчанию — Москва
           setCity('Москва');
           setLatitude(55.7558);
           setLongitude(37.6173);
@@ -35,14 +34,12 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
           const loc = await Location.getCurrentPositionAsync({});
           setLatitude(loc.coords.latitude);
           setLongitude(loc.coords.longitude);
-
-          const geo = await Location.reverseGeocodeAsync({
-            latitude: loc.coords.latitude,
-            longitude: loc.coords.longitude,
-          });
-
-          const detectedCity = geo[0]?.city || geo[0]?.region || 'Москва';
-          setCity(detectedCity);
+          const response = await fetch(
+           `https://api.opencagedata.com/geocode/v1/json?q=${loc.coords.latitude}+${loc.coords.longitude}&language=ru&key=8c19fc4500d448af89913363ee5699a2`
+          );
+          const data = await response.json();
+          const detectedCity = data.results[0].components.city || data.results[0].components.town || data.results[0].components.village;
+          setCity(detectedCity || 'Москва');
         }
       } catch (e) {
         console.error('Ошибка геолокации:', e);

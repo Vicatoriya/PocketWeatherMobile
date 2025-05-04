@@ -2,6 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   return (
@@ -9,14 +10,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          tabBarIcon: ({ color, size }) =>
+          (
+            <MaterialCommunityIcons name="weather-sunny" color={color} size={size} />
+          ),
+          title: 'Текущая погода',
           headerShown: false,
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          tabBarIcon: ({ color, size }) =>
+          (
+              <MaterialCommunityIcons name="calendar-clock" color={color} size={size} />
+          ),
+          title: 'Прогноз погоды',
           headerShown: false,
         }}
       />

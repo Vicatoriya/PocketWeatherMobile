@@ -73,11 +73,12 @@ export const fetchForecast = async (
         lang: 'ru',
       },
     });
-    return data.forecast.forecastday;
+    return data.forecast.forecastday; // правильно возвращаем массив
   } catch (error) {
     throw new Error('Не удалось получить прогноз');
   }
 };
+
 
 // Тип для входных параметров
 type ForecastParams = {
