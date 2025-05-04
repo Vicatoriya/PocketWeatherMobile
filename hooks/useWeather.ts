@@ -1,26 +1,19 @@
 import { useState, useEffect } from 'react';
 import {
   fetchCurrentWeather,
-  fetchForecast,
   CurrentWeatherResponse,
-  ForecastDay,
 } from '../services/weatherApi';
 
 export const useWeather = (city: string) => {
   const [weather, setWeather] = useState<CurrentWeatherResponse | null>(null);
-  const [forecast, setForecast] = useState<ForecastDay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const [current, forecast] = await Promise.all([
-        fetchCurrentWeather(city),
-        fetchForecast(city),
-      ]);
+      const current = await fetchCurrentWeather(city);
       setWeather(current);
-      setForecast(forecast);
       setError('');
     } catch (err) {
       setError(err.message);
@@ -33,5 +26,5 @@ export const useWeather = (city: string) => {
     loadData();
   }, [city]);
 
-  return { weather, forecast, loading, error, refresh: loadData };
+  return { weather, loading, error, refresh: loadData };
 };
