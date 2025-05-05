@@ -8,19 +8,19 @@ import {
 
 export const useForecast = (city: string) => {
   const [forecast, setForecast] = useState<ForecastDay[] | null>(null);
-  const [hourlyForecast, setHourlyForecast] = useState<HourlyForecastItem[] | null>(null);
+  const [hourlyForecast, setHourlyForecast] = useState<
+    HourlyForecastItem[] | null
+  >(null);
   const [loadingForecast, setLoadingForecast] = useState(true);
   const [error, setError] = useState('');
 
   const loadData = async () => {
     try {
       setLoadingForecast(true);
-      console.log('s');
       const [forecastData, hourlyData] = await Promise.all([
         fetchForecast(city),
         fetchHourlyForecast(city),
       ]);
-    console.log(forecastData);
       setForecast(forecastData);
       setHourlyForecast(hourlyData);
       setError('');

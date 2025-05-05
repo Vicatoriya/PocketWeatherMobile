@@ -1,53 +1,66 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
+  const { t } = useTranslation();
+
   return (
     <Tabs>
       <Tabs.Screen
-        name="index"
+        name="main"
         options={{
-          tabBarIcon: ({ color, size }) =>
-          (
-            <MaterialCommunityIcons name="weather-sunny" color={color} size={size} />
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="weather-sunny"
+              color={color}
+              size={size}
+            />
           ),
-          title: 'Текущая погода',
+          title: t('tabs.currentWeather'),
           headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="forecast"
         options={{
-          tabBarIcon: ({ color, size }) =>
-          (
-              <MaterialCommunityIcons name="calendar-clock" color={color} size={size} />
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="calendar-clock"
+              color={color}
+              size={size}
+            />
           ),
-          title: 'Прогноз погоды',
+          title: t('tabs.forecast'),
           headerShown: false,
         }}
       />
       <Tabs.Screen
         name="map"
         options={{
-          tabBarIcon: ({ color, size }) =>
-          (
-              <MaterialCommunityIcons name="google-maps" color={color} size={size} />
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="google-maps"
+              color={color}
+              size={size}
+            />
           ),
-          title: 'Карта',
+          title: t('tabs.map'),
           headerShown: false,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          tabBarIcon: ({ color, size }) =>
-          (
-              <MaterialCommunityIcons name="align-vertical-distribute" color={color} size={size} />
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="align-vertical-distribute"
+              color={color}
+              size={size}
+            />
           ),
-          title: 'Настройки',
+          title: t('tabs.settings'),
           headerShown: false,
         }}
       />

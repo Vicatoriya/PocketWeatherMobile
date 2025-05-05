@@ -1,0 +1,60 @@
+{
+  "interface": {
+    "wind": "Ветер",
+    "humidity": "Влажность",
+    "pressure": "Давление",
+    "uv": "УФ-индекс",
+    "cloud": "Облачность",
+    "precip": "Осадки",
+    "weekForecast": "Прогноз на неделю",
+    "hourlyForecast": "Прогноз на 24 часа",
+    "historyForecast": "Последние 3 дня"
+  },
+  "weather": {
+    "humidity": {
+      "dry": "Сухо",
+      "comfort": "Комфортно",
+      "high": "Высокая влажность"
+    },
+    "pressure": {
+      "low": "Низкое",
+      "normal": "Нормальное",
+      "high": "Высокое"
+    },
+    "uv": {
+      "low": "Низкий",
+      "moderate": "Умеренный",
+      "high": "Высокий",
+      "veryHigh": "Очень высокий"
+    },
+    "wind": {
+      "north": "Северный",
+      "north-northeast": "Северо-северо-восточный",
+      "northeast": "Северо-восточный",
+      "east-northeast": "Восточно-северо-восточный",
+      "east": "Восточный",
+      "east-southeast": "Восточно-юго-восточный",
+      "southeast": "Юго-восточный",
+      "south-southeast": "Юго-юго-восточный",
+      "south": "Южный",
+      "south-southwest": "Юго-юго-западный",
+      "southwest": "Юго-западный",
+      "west-southwest": "Западно-юго-западный",
+      "west": "Западный",
+      "west-northwest": "Западно-северо-западный",
+      "northwest": "Северо-западный",
+      "north-northwest": "Северо-северо-западный"
+    }
+  },
+  "tabs": {
+    "currentWeather": "Текущая погода",
+    "forecast": "Прогноз погоды",
+    "map": "Карта",
+    "settings": "Настройки"
+  },
+  "settings": {
+    "ecoMode": "Режим \"Экология\"",
+    "dachaMode": "Режим \"Дача\"",
+    "language": "Язык"
+  }
+}

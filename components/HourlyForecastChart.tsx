@@ -1,6 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Image,
+} from 'react-native';
 import { HourlyForecastItem } from '../services/weatherApi';
+import { useTranslation } from 'react-i18next';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -8,14 +16,19 @@ interface HourlyForecastChartProps {
   hourlyForecast: HourlyForecastItem[];
 }
 
-const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hourlyForecast }) => {
+const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({
+  hourlyForecast,
+}) => {
+  const { t } = useTranslation();
   if (!Array.isArray(hourlyForecast)) {
-    return <Text style={styles.error}>Нет данных для отображения прогноза</Text>;
+    return (
+      <Text style={styles.error}>Нет данных для отображения прогноза</Text>
+    );
   }
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>Прогноз на 24 часа</Text>
+      <Text style={styles.title}>{t('interface.hourlyForecast')}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.cardRow}>
           {hourlyForecast.map((item, index) => (

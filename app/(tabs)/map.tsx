@@ -6,21 +6,21 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import { View } from 'react-native';
 
 export default function MapScreen() {
-    const { locationLoaded } = useContext(LocationContext);
-  
-    if (!locationLoaded) {
-      return <LoadingIndicator />;
-    }
-  
-    return (
-      <View style={styles.container}>
-        <WeatherMap />
-      </View>
-    );
+  const { locationLoaded } = useContext(LocationContext);
+
+  if (!locationLoaded) {
+    return <LoadingIndicator />;
   }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-  });
+
+  return (
+    <View style={styles.container}>
+      <WeatherMap />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

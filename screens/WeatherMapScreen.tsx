@@ -11,12 +11,12 @@ import { useAir, AirQualityData} from '@/hooks/useAir';
 import { SettingsContext } from '@/context/SettingsContext';
 
 type WeatherMarker = {
-    id: string;
-    coordinates: {
-        latitude: number;
-        longitude: number;
-    };
-    weatherData?: CurrentWeatherResponse | null;
+  id: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  weatherData?: CurrentWeatherResponse | null;
 };
 
 const parameterNames: { [key: string]: string } = {

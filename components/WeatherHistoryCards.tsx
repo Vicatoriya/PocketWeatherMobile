@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const { width } = Dimensions.get('window');
 
 const WeatherHistoryCards = ({ weatherHistory }) => {
+  const { t } = useTranslation();
   return (
     <>
-      <Text style={styles.sectionTitle}>Прошедшие 3 дня</Text>
+      <Text style={styles.sectionTitle}>{t('interface.historyForecast')}</Text>
       <View style={styles.cardRow}>
         {weatherHistory.map((item, index) => (
           <View key={index} style={styles.card}>

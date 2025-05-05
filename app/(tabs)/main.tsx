@@ -21,14 +21,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      {city && (
-        <MainScreen
-          weather={weather}
-          forecast={forecast}
-          city={city}
-          onRefresh={refresh}
-        />
-      )}
+      {city && <MainScreen weather={weather} city={city} onRefresh={refresh} />}
     </View>
   );
 }

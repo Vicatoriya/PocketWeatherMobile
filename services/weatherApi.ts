@@ -45,13 +45,14 @@ export interface ForecastDay {
 
 export const fetchCurrentWeather = async (
   city: string,
+  lang: string = 'ru',
 ): Promise<CurrentWeatherResponse> => {
   try {
     const { data } = await axios.get(`${BASE_URL}/current.json`, {
       params: {
         key: WEATHER_API_KEY,
         q: city,
-        lang: 'ru',
+        lang,
       },
     });
     return data.current;
@@ -79,54 +80,8 @@ export const fetchForecast = async (
   }
 };
 
-
-// Тип для входных параметров
-type ForecastParams = {
-  latitude: number;
-  longitude: number;
-  start_date: string;
-  end_date: string;
-  daily: string[];
-  timezone: string;
-};
-
-// Тип для возвращаемого результата
-type WeatherDay = {
-  date: string;
-  maxTemp: string;
-};
-
-// Основная функция прогноза
-export async function getForecast(params: ForecastParams): Promise<WeatherDay[]> {
-  try {
-    const responses = await fetchWeatherApi(url, params);
-    const response = responses[0];
-
-    const daily = response.daily();
-    const start = BigInt(daily.time());       // Начальная дата (в секундах)
-    const interval = BigInt(daily.interval()); // Интервал между днями (в секундах)
-
-    const tempsMax = daily.variables(1).valuesArray() as number[];
-
-    const result: WeatherDay[] = [];
-
-    for (let i = 0; i < tempsMax.length; i++) {
-      const timestamp = (start + BigInt(i) * interval) * 1000n; // в миллисекундах
-      const date = new Date(Number(timestamp)).toISOString().split('T')[0];
-      const maxTemp = tempsMax[i].toFixed(1);
-      result.push({ date, maxTemp });
-    }
-
-    return result;
-  } catch (e) {
-    console.error('Ошибка при получении данных:', e);
-    return [];
-  }
-}
-
-
 export const fetchHourlyForecast = async (
-  city: string
+  city: string,
 ): Promise<HourlyForecastItem[]> => {
   try {
     const { data } = await axios.get(`${BASE_URL}/forecast.json`, {
@@ -165,3 +120,70 @@ export const fetchHourlyForecast = async (
     throw new Error('Не удалось получить почасовой прогноз погоды');
   }
 };
+
+
+
+// Тип для входных параметров
+type ForecastParams = {
+  latitude: number;
+  longitude: number;
+  start_date: string;
+  end_date: string;
+  daily: string[];
+  timezone: string;
+};
+
+// Тип для возвращаемого результата
+type WeatherDay = {
+  date: string;
+  maxTemp: string;
+};
+
+export async function getRecentWeather(lat: number, lon: number) {
+  const url = 'https://api.open-meteo.com/v1/forecast';
+
+  const { data } = await axios.get(url, {
+    params: {
+      latitude: lat,
+      longitude: lon,
+      daily: ['temperature_2m_max'],
+      past_days: 1,
+      timezone: 'auto',
+    },
+  });
+
+  return data.daily.time.map((date: string, i: number) => ({
+    date,
+    maxTemp: data.daily.temperature_2m_max[i].toFixed(1),
+  }));
+}
+
+
+export async function getArchivedWeather(lat: number, lon: number): Promise<WeatherDay[]> {
+  const url = 'https://archive-api.open-meteo.com/v1/archive';
+
+  const today = new Date();
+  const start = new Date(today);
+  start.setDate(today.getDate() - 3); // 3 дня назад
+  const end = new Date(today);
+  end.setDate(today.getDate() - 2);   // 2 дня назад
+
+  const format = (d: Date) => d.toISOString().split('T')[0];
+
+  const { data } = await axios.get(url, {
+    params: {
+      latitude: lat,
+      longitude: lon,
+      start_date: format(start),
+      end_date: format(end),
+      daily: ['temperature_2m_max'],
+      timezone: 'auto',
+    },
+  });
+
+  return data.daily.time.map((date: string, i: number) => ({
+    date,
+    maxTemp: data.daily.temperature_2m_max[i].toFixed(1),
+  }));
+}
+
