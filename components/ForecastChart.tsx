@@ -36,15 +36,14 @@ interface ForecastDay {
 const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
   if (!Array.isArray(forecast)) return null;
 
-  const maxTemps = forecast.map(day => day.day.maxtemp_c);
-  const minTemps = forecast.map(day => day.day.mintemp_c);
-  const dates = forecast.map(day => day.date.slice(5));
+  const maxTemps = forecast.map((day) => day.day.maxtemp_c);
+  const minTemps = forecast.map((day) => day.day.mintemp_c);
+  const dates = forecast.map((day) => day.date.slice(5));
 
   const allTemps = [...maxTemps, ...minTemps];
   const yMin = Math.floor(Math.min(...allTemps)) - 1;
   const yMax = Math.ceil(Math.max(...allTemps)) + 1;
   const chartWidth = Math.max(SCREEN_WIDTH, forecast.length * 70);
-
 
   const CombinedLinesAndLabels = ({ x, y }: any) => (
     <G>
@@ -66,7 +65,7 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
             strokeWidth={2}
             filter="url(#glow)"
           />
-        )
+        ),
       )}
 
       {minTemps.map((_, i) =>
@@ -81,7 +80,7 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
             strokeWidth={2}
             filter="url(#glow)"
           />
-        )
+        ),
       )}
 
       {forecast.map((day, index) => {
@@ -91,7 +90,13 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
 
         return (
           <G key={index}>
-            <Circle cx={x(index)} cy={y(max)} r={4} stroke="white" fill="white" />
+            <Circle
+              cx={x(index)}
+              cy={y(max)}
+              r={4}
+              stroke="white"
+              fill="white"
+            />
             <SVGText
               x={x(index)}
               y={y(max) - 12}
@@ -104,7 +109,13 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
               {Math.round(max)}°
             </SVGText>
 
-            <Circle cx={x(index)} cy={y(min)} r={4} stroke="white" fill="white" />
+            <Circle
+              cx={x(index)}
+              cy={y(min)}
+              r={4}
+              stroke="white"
+              fill="white"
+            />
             <SVGText
               x={x(index)}
               y={y(min) + 16}
@@ -117,8 +128,16 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
               {Math.round(min)}°
             </SVGText>
 
-            <ForeignObject x={x(index) - 16} y={y(yMin) + 5} width={32} height={32}>
-              <Image source={{ uri: iconUrl }} style={{ width: 32, height: 32 }} />
+            <ForeignObject
+              x={x(index) - 16}
+              y={y(yMin) + 5}
+              width={32}
+              height={32}
+            >
+              <Image
+                source={{ uri: iconUrl }}
+                style={{ width: 32, height: 32 }}
+              />
             </ForeignObject>
 
             <SVGText

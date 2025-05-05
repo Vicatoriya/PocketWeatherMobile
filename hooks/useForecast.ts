@@ -8,7 +8,9 @@ import {
 
 export const useForecast = (city: string) => {
   const [forecast, setForecast] = useState<ForecastDay[] | null>(null);
-  const [hourlyForecast, setHourlyForecast] = useState<HourlyForecastItem[] | null>(null);
+  const [hourlyForecast, setHourlyForecast] = useState<
+    HourlyForecastItem[] | null
+  >(null);
   const [loadingForecast, setLoadingForecast] = useState(true);
   const [error, setError] = useState('');
 
@@ -20,7 +22,7 @@ export const useForecast = (city: string) => {
         fetchForecast(city),
         fetchHourlyForecast(city),
       ]);
-    console.log(forecastData);
+      console.log(forecastData);
       setForecast(forecastData);
       setHourlyForecast(hourlyData);
       setError('');

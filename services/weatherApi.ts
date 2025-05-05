@@ -45,13 +45,14 @@ export interface ForecastDay {
 
 export const fetchCurrentWeather = async (
   city: string,
+  lang: string = 'ru'
 ): Promise<CurrentWeatherResponse> => {
   try {
     const { data } = await axios.get(`${BASE_URL}/current.json`, {
       params: {
         key: WEATHER_API_KEY,
         q: city,
-        lang: 'ru',
+        lang,
       },
     });
     return data.current;
@@ -59,6 +60,7 @@ export const fetchCurrentWeather = async (
     throw new Error('Не удалось получить данные о погоде');
   }
 };
+
 
 export const fetchForecast = async (
   city: string,
@@ -79,7 +81,6 @@ export const fetchForecast = async (
   }
 };
 
-
 // Тип для входных параметров
 type ForecastParams = {
   latitude: number;
@@ -97,13 +98,15 @@ type WeatherDay = {
 };
 
 // Основная функция прогноза
-export async function getForecast(params: ForecastParams): Promise<WeatherDay[]> {
+export async function getForecast(
+  params: ForecastParams,
+): Promise<WeatherDay[]> {
   try {
     const responses = await fetchWeatherApi(url, params);
     const response = responses[0];
 
     const daily = response.daily();
-    const start = BigInt(daily.time());       // Начальная дата (в секундах)
+    const start = BigInt(daily.time()); // Начальная дата (в секундах)
     const interval = BigInt(daily.interval()); // Интервал между днями (в секундах)
 
     const tempsMax = daily.variables(1).valuesArray() as number[];
@@ -124,9 +127,8 @@ export async function getForecast(params: ForecastParams): Promise<WeatherDay[]>
   }
 }
 
-
 export const fetchHourlyForecast = async (
-  city: string
+  city: string,
 ): Promise<HourlyForecastItem[]> => {
   try {
     const { data } = await axios.get(`${BASE_URL}/forecast.json`, {

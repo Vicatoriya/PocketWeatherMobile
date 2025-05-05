@@ -1,3 +1,52 @@
 {
-  "en": "fefw"
+  "interface": {
+    "wind": "Wind",
+    "humidity": "Humidity",
+    "pressure": "Pressure",
+    "uv": "UV Index",
+    "cloud": "Cloudiness",
+    "precip": "Precipitation"
+  },
+  "weather": {
+    "humidity": {
+      "dry": "Dry",
+      "comfort": "Comfortable",
+      "high": "High humidity"
+    },
+    "pressure": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High"
+    },
+    "uv": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High",
+      "veryHigh": "Very high"
+    },
+    "wind": {
+      "north": "North",
+      "north-northeast": "North-northeast",
+      "northeast": "Northeast",
+      "east-northeast": "East-northeast",
+      "east": "East",
+      "east-southeast": "East-southeast",
+      "southeast": "Southeast",
+      "south-southeast": "South-southeast",
+      "south": "South",
+      "south-southwest": "South-southwest",
+      "southwest": "Southwest",
+      "west-southwest": "West-southwest",
+      "west": "West",
+      "west-northwest": "West-northwest",
+      "northwest": "Northwest",
+      "north-northwest": "North-northwest"
+    }
+  },
+  "tabs": {
+    "currentWeather": "Current Weather",
+    "forecast": "Forecast",
+    "map": "Map",
+    "settings": "Settings"
+  }
 }

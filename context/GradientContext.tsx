@@ -24,8 +24,10 @@ const GradientContext = createContext<string[]>(gradients.default);
 
 export const useGradient = () => useContext(GradientContext);
 
-export const GradientProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { city } = useContext(LocationContext);
+export const GradientProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { city } = useContext(LocationContext);
   const { weather } = useWeather(city);
 
   const gradient = useMemo(() => {

@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useGradient } from '../context/GradientContext';
 import HourlyForecastChart from '../components/HourlyForecastChart';
 
-const ForecastScreen = ({ weatherHistory, forecast , hourlyForecast }) => {
+const ForecastScreen = ({ weatherHistory, forecast, hourlyForecast }) => {
   const gradient = useGradient();
 
   return (

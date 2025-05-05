@@ -14,13 +14,27 @@ const LanguageToggle = () => {
           style={[styles.button, currentLang === 'ru' && styles.selected]}
           onPress={() => setLanguage('ru')}
         >
-          <Text style={[styles.buttonText, currentLang === 'ru' && styles.selectedText]}>RU</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              currentLang === 'ru' && styles.selectedText,
+            ]}
+          >
+            RU
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, currentLang === 'en' && styles.selected]}
           onPress={() => setLanguage('en')}
         >
-          <Text style={[styles.buttonText, currentLang === 'en' && styles.selectedText]}>EN</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              currentLang === 'en' && styles.selectedText,
+            ]}
+          >
+            EN
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

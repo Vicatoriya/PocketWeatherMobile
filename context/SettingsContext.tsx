@@ -41,7 +41,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         if (stored) {
           const parsed = JSON.parse(stored);
           setSettings(parsed);
-          i18n.changeLanguage(parsed.language); // применим язык
+          i18n.changeLanguage(parsed.language);
         }
       } catch (error) {
         console.error('Ошибка при загрузке настроек:', error);
@@ -76,7 +76,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <SettingsContext.Provider
-      value={{ settings, toggleEcoMode, toggleDachaMode, setLanguage, loaded }}>
+      value={{ settings, toggleEcoMode, toggleDachaMode, setLanguage, loaded }}
+    >
       {children}
     </SettingsContext.Provider>
   );

@@ -4,7 +4,8 @@ import { SettingsContext } from '@/context/SettingsContext';
 import LanguageToggle from '../components/LanguageToggle';
 
 const SettingsScreen = () => {
-  const { settings, toggleEcoMode, toggleDachaMode, loaded } = useContext(SettingsContext);
+  const { settings, toggleEcoMode, toggleDachaMode, loaded } =
+    useContext(SettingsContext);
 
   if (!loaded) {
     return (
@@ -25,7 +26,7 @@ const SettingsScreen = () => {
           thumbColor={settings.ecoMode ? '#2196F3' : '#f4f3f4'}
         />
       </View>
-      <View style={styles.divider}/>
+      <View style={styles.divider} />
 
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>Режим "Дача"</Text>
@@ -36,10 +37,10 @@ const SettingsScreen = () => {
           thumbColor={settings.dachaMode ? '#2196F3' : '#f4f3f4'}
         />
       </View>
-      <View style={styles.divider}/>
+      <View style={styles.divider} />
 
       <LanguageToggle />
-      <View style={styles.divider}/>
+      <View style={styles.divider} />
     </View>
   );
 };
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   settingText: {
     fontSize: 16,

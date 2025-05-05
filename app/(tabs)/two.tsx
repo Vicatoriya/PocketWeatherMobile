@@ -11,14 +11,20 @@ import { fetchWeatherApi } from 'openmeteo';
 import { useForecast } from '../../hooks/useForecast';
 
 export default function TabTwoScreen() {
-  const { city, latitude, longitude, locationLoaded } = useContext(LocationContext);
-  const { history, loading} = useHistory(latitude, longitude);
+  const { city, latitude, longitude, locationLoaded } =
+    useContext(LocationContext);
+  const { history, loading } = useHistory(latitude, longitude);
   const { forecast, loadingForecast, hourlyForecast } = useForecast(city);
 
-  if (loading || !locationLoaded || loadingForecast) return <LoadingIndicator />;
+  if (loading || !locationLoaded || loadingForecast)
+    return <LoadingIndicator />;
   return (
     <View style={styles.container}>
-      <ForecastScreen weatherHistory={history} forecast={forecast} hourlyForecast={hourlyForecast}/>
+      <ForecastScreen
+        weatherHistory={history}
+        forecast={forecast}
+        hourlyForecast={hourlyForecast}
+      />
     </View>
   );
 }

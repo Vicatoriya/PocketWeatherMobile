@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import * as Location from 'expo-location';
+import { useTranslation } from 'react-i18next';
 
 type LocationContextType = {
   city: string | null;
@@ -21,6 +22,8 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locationLoaded, setLocationLoaded] = useState(false);
 
+  const { i18n } = useTranslation();
+
   useEffect(() => {
     (async () => {
       try {
@@ -32,14 +35,25 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
           setLongitude(37.6173);
         } else {
           const loc = await Location.getLastKnownPositionAsync({});
-          setLatitude(loc.coords.latitude);
-          setLongitude(loc.coords.longitude);
-          const response = await fetch(
-           `https://api.opencagedata.com/geocode/v1/json?q=${loc.coords.latitude}+${loc.coords.longitude}&language=ru&key=8c19fc4500d448af89913363ee5699a2`
-          );
-          const data = await response.json();
-          const detectedCity = data.results[0].components.city || data.results[0].components.town || data.results[0].components.village;
-          setCity(detectedCity || 'Москва');
+          if (loc) {
+            setLatitude(loc.coords.latitude);
+            setLongitude(loc.coords.longitude);
+
+            const response = await fetch(
+              `https://api.opencagedata.com/geocode/v1/json?q=${loc.coords.latitude}+${loc.coords.longitude}&language=${i18n.language}&key=8c19fc4500d448af89913363ee5699a2`
+            );
+
+            const data = await response.json();
+            const detectedCity =
+              data.results[0].components.city ||
+              data.results[0].components.town ||
+              data.results[0].components.village;
+            setCity(detectedCity || 'Москва');
+          } else {
+            setCity('Москва');
+            setLatitude(55.7558);
+            setLongitude(37.6173);
+          }
         }
       } catch (e) {
         console.error('Ошибка геолокации:', e);
@@ -50,10 +64,12 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
         setLocationLoaded(true);
       }
     })();
-  }, []);
+  }, [i18n.language]);
 
   return (
-    <LocationContext.Provider value={{ city, latitude, longitude, locationLoaded }}>
+    <LocationContext.Provider
+      value={{ city, latitude, longitude, locationLoaded }}
+    >
       {children}
     </LocationContext.Provider>
   );

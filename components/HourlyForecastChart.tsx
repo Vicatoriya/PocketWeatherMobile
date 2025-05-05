@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Image,
+} from 'react-native';
 import { HourlyForecastItem } from '../services/weatherApi';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -8,9 +15,13 @@ interface HourlyForecastChartProps {
   hourlyForecast: HourlyForecastItem[];
 }
 
-const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hourlyForecast }) => {
+const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({
+  hourlyForecast,
+}) => {
   if (!Array.isArray(hourlyForecast)) {
-    return <Text style={styles.error}>Нет данных для отображения прогноза</Text>;
+    return (
+      <Text style={styles.error}>Нет данных для отображения прогноза</Text>
+    );
   }
 
   return (

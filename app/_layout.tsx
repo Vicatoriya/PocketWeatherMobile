@@ -9,11 +9,11 @@ export default function RootLayout() {
   return (
     <LocationProvider>
       <SettingsProvider>
-      <GradientProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </GradientProvider>
+        <GradientProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+        </GradientProvider>
       </SettingsProvider>
     </LocationProvider>
   );
