@@ -74,7 +74,7 @@ export const fetchForecast = async (
         lang: 'ru',
       },
     });
-    return data.forecast.forecastday; // правильно возвращаем массив
+    return data.forecast.forecastday;
   } catch (error) {
     throw new Error('Не удалось получить прогноз');
   }
@@ -107,7 +107,6 @@ export const fetchHourlyForecast = async (
     const now = new Date();
     const nowISO = now.toISOString().slice(0, 13);
 
-    // Фильтруем только 24 часа, начиная с текущего
     const result = allHours
       .filter((hour) => {
         const hourISO = new Date(hour.time).toISOString().slice(0, 13);
@@ -121,9 +120,6 @@ export const fetchHourlyForecast = async (
   }
 };
 
-
-
-// Тип для входных параметров
 type ForecastParams = {
   latitude: number;
   longitude: number;
@@ -133,7 +129,6 @@ type ForecastParams = {
   timezone: string;
 };
 
-// Тип для возвращаемого результата
 type WeatherDay = {
   date: string;
   maxTemp: string;
@@ -158,16 +153,17 @@ export async function getRecentWeather(lat: number, lon: number) {
   }));
 }
 
-
-export async function getArchivedWeather(lat: number, lon: number): Promise<WeatherDay[]> {
+export async function getArchivedWeather(
+  lat: number,
+  lon: number,
+): Promise<WeatherDay[]> {
   const url = 'https://archive-api.open-meteo.com/v1/archive';
 
   const today = new Date();
   const start = new Date(today);
-  start.setDate(today.getDate() - 3); // 3 дня назад
+  start.setDate(today.getDate() - 3);
   const end = new Date(today);
-  end.setDate(today.getDate() - 2);   // 2 дня назад
-
+  end.setDate(today.getDate() - 2);
   const format = (d: Date) => d.toISOString().split('T')[0];
 
   const { data } = await axios.get(url, {
@@ -186,4 +182,3 @@ export async function getArchivedWeather(lat: number, lon: number): Promise<Weat
     maxTemp: data.daily.temperature_2m_max[i].toFixed(1),
   }));
 }
-
