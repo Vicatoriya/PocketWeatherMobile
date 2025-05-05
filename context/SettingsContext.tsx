@@ -1,27 +1,32 @@
+import i18n from '../i18n';
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Settings = {
   ecoMode: boolean;
   dachaMode: boolean;
+  language: 'ru' | 'en';
 };
 
 type SettingsContextType = {
   settings: Settings;
   toggleEcoMode: () => void;
   toggleDachaMode: () => void;
+  setLanguage: (lang: 'ru' | 'en') => void;
   loaded: boolean;
 };
 
 const defaultSettings: Settings = {
   ecoMode: false,
   dachaMode: false,
+  language: 'ru',
 };
 
 export const SettingsContext = createContext<SettingsContextType>({
   settings: defaultSettings,
   toggleEcoMode: () => {},
   toggleDachaMode: () => {},
+  setLanguage: () => {},
   loaded: false,
 });
 
@@ -32,17 +37,18 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const storedSettings = await AsyncStorage.getItem('appSettings');
-        if (storedSettings) {
-          setSettings(JSON.parse(storedSettings));
+        const stored = await AsyncStorage.getItem('appSettings');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setSettings(parsed);
+          i18n.changeLanguage(parsed.language); // применим язык
         }
       } catch (error) {
-        console.error('Error loading settings:', error);
+        console.error('Ошибка при загрузке настроек:', error);
       } finally {
         setLoaded(true);
       }
     };
-
     loadSettings();
   }, []);
 
@@ -51,23 +57,26 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       await AsyncStorage.setItem('appSettings', JSON.stringify(newSettings));
       setSettings(newSettings);
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.error('Ошибка при сохранении настроек:', error);
     }
   };
 
   const toggleEcoMode = () => {
-    const newSettings = { ...settings, ecoMode: !settings.ecoMode };
-    saveSettings(newSettings);
+    saveSettings({ ...settings, ecoMode: !settings.ecoMode });
   };
 
   const toggleDachaMode = () => {
-    const newSettings = { ...settings, dachaMode: !settings.dachaMode };
-    saveSettings(newSettings);
+    saveSettings({ ...settings, dachaMode: !settings.dachaMode });
+  };
+
+  const setLanguage = (lang: 'ru' | 'en') => {
+    i18n.changeLanguage(lang);
+    saveSettings({ ...settings, language: lang });
   };
 
   return (
     <SettingsContext.Provider
-      value={{ settings, toggleEcoMode, toggleDachaMode, loaded }}>
+      value={{ settings, toggleEcoMode, toggleDachaMode, setLanguage, loaded }}>
       {children}
     </SettingsContext.Provider>
   );
