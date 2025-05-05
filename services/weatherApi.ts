@@ -121,8 +121,6 @@ export const fetchHourlyForecast = async (
   }
 };
 
-
-
 // Тип для входных параметров
 type ForecastParams = {
   latitude: number;
@@ -158,15 +156,17 @@ export async function getRecentWeather(lat: number, lon: number) {
   }));
 }
 
-
-export async function getArchivedWeather(lat: number, lon: number): Promise<WeatherDay[]> {
+export async function getArchivedWeather(
+  lat: number,
+  lon: number,
+): Promise<WeatherDay[]> {
   const url = 'https://archive-api.open-meteo.com/v1/archive';
 
   const today = new Date();
   const start = new Date(today);
   start.setDate(today.getDate() - 3); // 3 дня назад
   const end = new Date(today);
-  end.setDate(today.getDate() - 2);   // 2 дня назад
+  end.setDate(today.getDate() - 2); // 2 дня назад
 
   const format = (d: Date) => d.toISOString().split('T')[0];
 
@@ -186,4 +186,3 @@ export async function getArchivedWeather(lat: number, lon: number): Promise<Weat
     maxTemp: data.daily.temperature_2m_max[i].toFixed(1),
   }));
 }
-

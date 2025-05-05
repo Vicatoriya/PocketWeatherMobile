@@ -7,10 +7,7 @@ type WeatherDay = {
   maxTemp: string;
 };
 
-export const useHistory = (
-  lat: number | null,
-  lon: number | null
-) => {
+export const useHistory = (lat: number | null, lon: number | null) => {
   const [history, setHistory] = useState<WeatherDay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

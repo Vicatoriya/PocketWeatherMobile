@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { LocationProvider } from '../context/LocationContext';
 import { GradientProvider } from '../context/GradientContext';
-import { SettingsProvider } from '@/context/SettingsContext';
+import { SettingsProvider } from '../context/SettingsContext';
 
 export default function RootLayout() {
   return (
