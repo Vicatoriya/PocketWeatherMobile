@@ -29,6 +29,28 @@ export default function TabLayout() {
           headerShown: false,
         }}
       />
+      <Tabs.Screen
+        name="map"
+        options={{
+          tabBarIcon: ({ color, size }) =>
+          (
+              <MaterialCommunityIcons name="google-maps" color={color} size={size} />
+          ),
+          title: 'Карта',
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          tabBarIcon: ({ color, size }) =>
+          (
+              <MaterialCommunityIcons name="align-vertical-distribute" color={color} size={size} />
+          ),
+          title: 'Настройки',
+          headerShown: false,
+        }}
+      />
     </Tabs>
   );
 }
