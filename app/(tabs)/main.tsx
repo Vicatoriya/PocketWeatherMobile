@@ -9,7 +9,7 @@ import { LocationContext } from '../../context/LocationContext';
 
 export default function TabOneScreen() {
   const { city, locationLoaded } = useContext(LocationContext);
-  const { weather, forecast, loading, error, refresh } = useWeather(city);
+  const { weather, forecast, loading, error, refresh } = useWeather(city || 'Москва');
 
   useEffect(() => {
     if (city) refresh();
