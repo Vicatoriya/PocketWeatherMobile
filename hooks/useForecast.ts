@@ -17,12 +17,10 @@ export const useForecast = (city: string) => {
   const loadData = async () => {
     try {
       setLoadingForecast(true);
-      console.log('s');
       const [forecastData, hourlyData] = await Promise.all([
         fetchForecast(city),
         fetchHourlyForecast(city),
       ]);
-      console.log(forecastData);
       setForecast(forecastData);
       setHourlyForecast(hourlyData);
       setError('');

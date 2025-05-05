@@ -1,52 +1,43 @@
-import { useState, useEffect } from 'react';
-import { getForecast } from '../services/weatherApi'; // Импорт функции прогноза
+import { useEffect, useState } from 'react';
+import { getRecentWeather } from '../services/weatherApi';
+import { getArchivedWeather } from '../services/weatherApi';
 
 type WeatherDay = {
   date: string;
   maxTemp: string;
 };
 
-export const useHistory = (latitude: number, longitude: number) => {
+export const useHistory = (
+  lat: number | null,
+  lon: number | null
+) => {
   const [history, setHistory] = useState<WeatherDay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchWeather = async () => {
+    if (lat == null || lon == null) return;
+
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
+        const [recent, archived] = await Promise.all([
+          getRecentWeather(lat, lon),
+          getArchivedWeather(lat, lon),
+        ]);
 
-        const today = new Date();
-
-        const start = new Date(today);
-        start.setDate(today.getDate() - 3);
-
-        const end = new Date(today);
-        end.setDate(today.getDate() - 1);
-
-        const format = (d: Date) => d.toISOString().split('T')[0];
-
-        const params = {
-          latitude,
-          longitude,
-          start_date: format(start),
-          end_date: format(end),
-          daily: ['temperature_2m_min', 'temperature_2m_max'],
-          timezone: 'auto',
-        };
-
-        const data = await getForecast(params);
-        setHistory(data);
+        const combined = [...archived, recent[0]];
+        setHistory(combined);
       } catch (err) {
-        setError('Ошибка при получении данных');
-        console.error('Ошибка в useForecast:', err);
+        setError('Ошибка при загрузке данных о погоде');
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchWeather();
-  }, [latitude, longitude]);
+    fetchData();
+  }, [lat, lon]);
 
   return { history, loading, error };
 };

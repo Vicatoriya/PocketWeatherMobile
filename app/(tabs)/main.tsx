@@ -16,7 +16,7 @@ export default function TabOneScreen() {
   useEffect(() => {
     if (city) refresh();
   }, [city]);
-  console.log(weather);
+
   if (loading || !locationLoaded) return <LoadingIndicator />;
 
   return (

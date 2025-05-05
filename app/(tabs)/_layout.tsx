@@ -9,7 +9,7 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="index"
+        name="main"
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -23,7 +23,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="forecast"
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
