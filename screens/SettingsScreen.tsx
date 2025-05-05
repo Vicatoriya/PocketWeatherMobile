@@ -2,23 +2,21 @@ import React, { useContext } from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
 import { SettingsContext } from '@/context/SettingsContext';
 import LanguageToggle from '../components/LanguageToggle';
+import { useTranslation } from 'react-i18next';
 
 const SettingsScreen = () => {
+  const { t } = useTranslation();
   const { settings, toggleEcoMode, toggleDachaMode, loaded } =
     useContext(SettingsContext);
 
   if (!loaded) {
-    return (
-      <View style={styles.container}>
-        <Text>Загрузка настроек...</Text>
-      </View>
-    );
+    return <LoadingIndicator />;
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Режим "Экология"</Text>
+        <Text style={styles.settingText}>{t('settings.ecoMode')}</Text>
         <Switch
           value={settings.ecoMode}
           onValueChange={toggleEcoMode}
@@ -29,7 +27,7 @@ const SettingsScreen = () => {
       <View style={styles.divider} />
 
       <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Режим "Дача"</Text>
+        <Text style={styles.settingText}>{t('settings.dachaMode')}</Text>
         <Switch
           value={settings.dachaMode}
           onValueChange={toggleDachaMode}

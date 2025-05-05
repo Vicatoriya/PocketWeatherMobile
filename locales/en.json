@@ -5,7 +5,10 @@
     "pressure": "Pressure",
     "uv": "UV Index",
     "cloud": "Cloudiness",
-    "precip": "Precipitation"
+    "precip": "Precipitation",
+    "weekForecast": "Week forecast",
+    "hourlyForecast": "24 hour forecast",
+    "historyForecast": "Last 3 days"
   },
   "weather": {
     "humidity": {
@@ -48,5 +51,10 @@
     "forecast": "Forecast",
     "map": "Map",
     "settings": "Settings"
+  },
+  "settings": {
+    "ecoMode": "\"Eco\" Mode",
+    "dachaMode": "\"Dacha\" Mode",
+    "language": "Language"
   }
 }

@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SettingsContext } from '@/context/SettingsContext';
+import { useTranslation } from 'react-i18next';
 
 const LanguageToggle = () => {
+  const { t } = useTranslation();
   const { settings, setLanguage } = useContext(SettingsContext);
   const currentLang = settings.language;
 
   return (
     <View style={styles.row}>
-      <Text style={styles.label}>Язык</Text>
+      <Text style={styles.label}>{t('settings.language')}</Text>
       <View style={styles.buttons}>
         <TouchableOpacity
           style={[styles.button, currentLang === 'ru' && styles.selected]}

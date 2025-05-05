@@ -19,6 +19,7 @@ import {
   Filter,
   FeGaussianBlur,
 } from 'react-native-svg';
+import { useTranslation } from 'react-i18next';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -34,6 +35,7 @@ interface ForecastDay {
 }
 
 const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
+  const { t } = useTranslation();
   if (!Array.isArray(forecast)) return null;
 
   const maxTemps = forecast.map((day) => day.day.maxtemp_c);
@@ -159,7 +161,7 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
 
   return (
     <>
-      <Text style={styles.sectionTitle}>Прогноз на неделю</Text>
+      <Text style={styles.sectionTitle}>{t('interface.weekForecast')}</Text>
       <View style={styles.card}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <LineChart

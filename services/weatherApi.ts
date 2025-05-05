@@ -45,7 +45,7 @@ export interface ForecastDay {
 
 export const fetchCurrentWeather = async (
   city: string,
-  lang: string = 'ru'
+  lang: string = 'ru',
 ): Promise<CurrentWeatherResponse> => {
   try {
     const { data } = await axios.get(`${BASE_URL}/current.json`, {
@@ -60,7 +60,6 @@ export const fetchCurrentWeather = async (
     throw new Error('Не удалось получить данные о погоде');
   }
 };
-
 
 export const fetchForecast = async (
   city: string,

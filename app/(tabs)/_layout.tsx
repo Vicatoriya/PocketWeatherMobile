@@ -12,7 +12,11 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="weather-sunny" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="weather-sunny"
+              color={color}
+              size={size}
+            />
           ),
           title: t('tabs.currentWeather'),
           headerShown: false,
@@ -22,7 +26,11 @@ export default function TabLayout() {
         name="two"
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="calendar-clock" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="calendar-clock"
+              color={color}
+              size={size}
+            />
           ),
           title: t('tabs.forecast'),
           headerShown: false,
@@ -32,7 +40,11 @@ export default function TabLayout() {
         name="map"
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="google-maps" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="google-maps"
+              color={color}
+              size={size}
+            />
           ),
           title: t('tabs.map'),
           headerShown: false,

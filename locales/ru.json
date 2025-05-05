@@ -5,7 +5,10 @@
     "pressure": "Давление",
     "uv": "УФ-индекс",
     "cloud": "Облачность",
-    "precip": "Осадки"
+    "precip": "Осадки",
+    "weekForecast": "Прогноз на неделю",
+    "hourlyForecast": "Прогноз на 24 часа",
+    "historyForecast": "Последние 3 дня"
   },
   "weather": {
     "humidity": {
@@ -48,5 +51,10 @@
     "forecast": "Прогноз погоды",
     "map": "Карта",
     "settings": "Настройки"
+  },
+  "settings": {
+    "ecoMode": "Режим \"Экология\"",
+    "dachaMode": "Режим \"Дача\"",
+    "language": "Язык"
   }
 }

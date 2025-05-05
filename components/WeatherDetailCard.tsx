@@ -5,17 +5,18 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width } = Dimensions.get('window');
 
 function WeatherDetailCard({ icon, title, value, description }) {
-    return(
-  <View style={styles.card}>
-    <MaterialCommunityIcons
-      name={icon}
-      size={28}
-      color="rgba(255,255,255,0.9)"
-    />
-    <Text style={styles.title}>{title}</Text>
-    <Text style={styles.value}>{value}</Text>
-    {description && <Text style={styles.description}>{description}</Text>}
-  </View>);
+  return (
+    <View style={styles.card}>
+      <MaterialCommunityIcons
+        name={icon}
+        size={28}
+        color="rgba(255,255,255,0.9)"
+      />
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.value}>{value}</Text>
+      {description && <Text style={styles.description}>{description}</Text>}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

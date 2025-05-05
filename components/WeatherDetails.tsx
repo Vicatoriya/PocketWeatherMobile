@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import WeatherDetailCard from './WeatherDetailCard';
 
 function WeatherDetails({ cards }) {
-    console.log("Cards",cards);
+  console.log('Cards', cards);
   return (
     <View style={styles.container}>
       {cards.map((card, idx) => (
