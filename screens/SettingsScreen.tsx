@@ -3,6 +3,7 @@ import { View, Text, Switch, StyleSheet } from 'react-native';
 import { SettingsContext } from '@/context/SettingsContext';
 import LanguageToggle from '../components/LanguageToggle';
 import { useTranslation } from 'react-i18next';
+import LoadingIndicator from '@/components/LoadingIndicator';
 
 const SettingsScreen = () => {
   const { t } = useTranslation();
