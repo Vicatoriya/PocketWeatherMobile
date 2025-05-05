@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
 import { SettingsContext } from '@/context/SettingsContext';
+import { LocationContext } from '@/context/LocationContext';
 
 const SettingsScreen = () => {
-  const { settings, toggleEcoMode, toggleDachaMode, loaded } = useContext(SettingsContext);
+    const { settings, toggleEcoMode, toggleDachaMode, loaded } = useContext(SettingsContext);
+    const { latitude, longitude } = useContext(LocationContext);
 
   if (!loaded) {
     return (
@@ -13,6 +15,7 @@ const SettingsScreen = () => {
     );
   }
 
+  
   return (
     <View style={styles.container}>
       <View style={styles.settingItem}>
@@ -35,7 +38,6 @@ const SettingsScreen = () => {
           thumbColor={settings.dachaMode ? '#2196F3' : '#f4f3f4'}
         />
       </View>
-      <View style={styles.divider}/>
     </View>
   );
 };
