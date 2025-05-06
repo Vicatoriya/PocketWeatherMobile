@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAir, AirQualityData } from '@/hooks/useAir';
 import { SettingsContext } from '@/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
+import FireLayer from '@/services/FireLayer';
 
 const WeatherMap = () => {
   const { t } = useTranslation();
