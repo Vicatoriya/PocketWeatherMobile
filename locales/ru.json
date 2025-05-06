@@ -54,7 +54,7 @@
   },
   "settings": {
     "ecoMode": "Режим \"Экология\"",
-    "dachaMode": "Режим \"Дача\"",
+    "dachaMode": "Режим \"Угрозы\"",
     "language": "Язык"
   },
   "search_placeholder": "Поиск места...",

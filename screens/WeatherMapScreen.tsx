@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView } from 'react-native';
-import { UrlTile, Marker } from 'react-native-maps';
+import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView, Image, Animated } from 'react-native';
+import { UrlTile, Marker, Circle } from 'react-native-maps';
 import MapView from 'react-native-maps';
 import { useWeather } from '@/hooks/useWeather';
 import { CurrentWeatherResponse } from '@/services/weatherApi';
@@ -10,6 +10,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAir, AirQualityData } from '@/hooks/useAir';
 import { SettingsContext } from '@/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
+import FireLayer from '@/services/FireLayer';
+
+const DEFAULT_COORDS = {
+  latitude: 55.7558,
+  longitude: 37.6173,
+};
 
 const WeatherMap = () => {
   const { t } = useTranslation();
@@ -20,11 +26,8 @@ const WeatherMap = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedCoords, setSelectedCoords] = useState(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const DEFAULT_COORDS = {
-    latitude: 55.7558,
-    longitude: 37.6173,
-  };
+  const [fireModeMessageVisible, setFireModeMessageVisible] = useState(false); 
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const region = {
     latitude: latitude || DEFAULT_COORDS.latitude,
@@ -183,6 +186,25 @@ const WeatherMap = () => {
     </View>
   );
 
+  const handleFireIconPress = () => {
+    setFireModeMessageVisible(true);
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          setFireModeMessageVisible(false);
+        });
+      }, 1000);
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -198,7 +220,10 @@ const WeatherMap = () => {
         </TouchableOpacity>
       </View>
 
-      <MapView style={styles.map} region={region} onPress={handleMapPress} ref={mapRef}>
+      <MapView  style={styles.map} 
+                region={region} 
+                onPress={handleMapPress} 
+                ref={mapRef}>
         <UrlTile
           urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maximumZ={19}
@@ -212,6 +237,11 @@ const WeatherMap = () => {
             onPress={() => handleMarkerPress(marker)}
           />
         ))}
+
+        {settings.dachaMode && (
+          <FireLayer isActive={settings.dachaMode}/>
+        )}
+
       </MapView>
 
       {(isPanelOpen && (selectedMarker || selectedCoords)) && renderWeatherPanel()}
@@ -219,9 +249,32 @@ const WeatherMap = () => {
       <View style={styles.attribution}>
         <Text style={styles.attributionText}>{t('osm_attribution')}</Text>
       </View>
+
+      {settings.dachaMode && (
+        <TouchableOpacity style={styles.fireIconContainer} onPress={handleFireIconPress}>
+          <Image
+            source={require('@/assets/fire.png')}
+            style={styles.fireIcon}
+          />
+        </TouchableOpacity>
+      )}
+
+      {fireModeMessageVisible && (
+        <Animated.View
+          style={[
+            styles.fireModeMessageContainer,
+            { opacity: fadeAnim }
+          ]}
+        >
+          <Text style={styles.fireModeMessageText}>Fire mode enabled</Text>
+        </Animated.View>
+      )}
+
     </View>
   );
 };
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -382,6 +435,31 @@ const styles = StyleSheet.create({
     color: '#666',
     flex: 1,
     textAlign: 'right',
+  },
+  fireIconContainer: {
+    position: 'absolute',
+    top: 90, 
+    right: 20,
+    padding: 7,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+    borderRadius: 5,
+    zIndex: 1000,
+  },
+  fireIcon: {
+    width: 30, 
+    height: 30,
+  },
+  fireModeMessageContainer: {
+    position: 'absolute',
+    top: 92,
+    right: 80,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 10,
+    borderRadius: 5,
+    zIndex: 1001,
+  },
+  fireModeMessageText: {
+    color: 'rgba(39, 145, 245, 0.8)',
   },
 });
 
