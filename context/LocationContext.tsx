@@ -7,6 +7,11 @@ type LocationContextType = {
   latitude: number | null;
   longitude: number | null;
   locationLoaded: boolean;
+  updateLocation: (
+    newCity?: string,
+    newLatitude?: number,
+    newLongitude?: number,
+  ) => void;
 };
 
 export const LocationContext = createContext<LocationContextType>({
@@ -14,6 +19,7 @@ export const LocationContext = createContext<LocationContextType>({
   latitude: null,
   longitude: null,
   locationLoaded: false,
+  updateLocation: () => {},
 });
 
 export const LocationProvider = ({ children }: { children: ReactNode }) => {
@@ -24,51 +30,67 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
 
   const { i18n } = useTranslation();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          console.warn('Нет разрешения');
-          setCity('Москва');
-          setLatitude(55.7558);
-          setLongitude(37.6173);
-        } else {
-          const loc = await Location.getLastKnownPositionAsync({});
-          if (loc) {
-            setLatitude(loc.coords.latitude);
-            setLongitude(loc.coords.longitude);
-
-            const response = await fetch(
-              `https://api.opencagedata.com/geocode/v1/json?q=${loc.coords.latitude}+${loc.coords.longitude}&language=${i18n.language}&key=163fb9c09df3410399d131efb835fd7f`,
-            );
-
-            const data = await response.json();
-            const detectedCity =
-              data.results[0].components.city ||
-              data.results[0].components.town ||
-              data.results[0].components.village;
-            setCity(detectedCity || 'Москва');
-          } else {
-            setCity('Москва');
-            setLatitude(55.7558);
-            setLongitude(37.6173);
-          }
-        }
-      } catch (e) {
-        console.error('Ошибка геолокации:', e);
+  const determineCurrentLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.warn('Нет разрешения');
         setCity('Москва');
         setLatitude(55.7558);
         setLongitude(37.6173);
-      } finally {
-        setLocationLoaded(true);
+        return;
       }
-    })();
+
+      const loc = await Location.getLastKnownPositionAsync({});
+      if (loc) {
+        const { latitude: lat, longitude: lon } = loc.coords;
+        setLatitude(lat);
+        setLongitude(lon);
+
+        const response = await fetch(
+          `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&language=${i18n.language}&key=163fb9c09df3410399d131efb835fd7f`,
+        );
+        const data = await response.json();
+        console.log(data);
+
+        if (data && data.results.length > 0) {
+          const comp = data.results[0].components;
+          const detectedCity =
+            comp.city || comp.town || comp.village || 'Неизвестно';
+          setCity(detectedCity);
+        } else {
+          setCity('Москва');
+        }
+      } else {
+        setCity('Москва');
+        setLatitude(55.7558);
+        setLongitude(37.6173);
+      }
+    } catch (e) {
+      console.error('Ошибка геолокации:', e);
+      setCity('Москва');
+      setLatitude(55.7558);
+      setLongitude(37.6173);
+    } finally {
+      setLocationLoaded(true);
+    }
+  };
+
+  const updateLocation = (newCity?: string) => {
+    if (newCity) {
+      setCity(newCity);
+    } else {
+      determineCurrentLocation();
+    }
+  };
+
+  useEffect(() => {
+    determineCurrentLocation();
   }, [i18n.language]);
 
   return (
     <LocationContext.Provider
-      value={{ city, latitude, longitude, locationLoaded }}
+      value={{ city, latitude, longitude, locationLoaded, updateLocation }}
     >
       {children}
     </LocationContext.Provider>

@@ -14,7 +14,6 @@ const SettingsScreen = () => {
     return <LoadingIndicator />;
   }
 
-  
   return (
     <View style={styles.container}>
       <View style={styles.settingItem}>

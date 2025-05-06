@@ -43,3 +43,30 @@ export const getWindDirection = (dir: string, t: TFunction): string => {
 
   return t(`weather.wind.${directions[dir] || dir}`);
 };
+
+const getGradient = (condition: string = '') => {
+  const lower = condition.toLowerCase();
+
+  // Проверки для русскоязычных условий
+  if (lower.includes('ясно')) return gradients.clear;
+  if (lower.includes('дождь')) return gradients.rain;
+  if (lower.includes('снег')) return gradients.snow;
+  if (lower.includes('облач')) return gradients.cloudy;
+
+  // Проверки для англоязычных условий
+  if (lower.includes('clear')) return gradients.clear;
+  if (lower.includes('rain')) return gradients.rain;
+  if (lower.includes('snow')) return gradients.snow;
+  if (lower.includes('cloudy')) return gradients.cloudy;
+
+  // Возвращаем дефолтный градиент, если ничего не совпало
+  return gradients.default;
+};
+
+const gradients = {
+  clear: ['#47b2ff', '#6c8ef5'],
+  cloudy: ['#5d6d7e', '#839192'],
+  rain: ['#2c3e50', '#3498db'],
+  snow: ['#a8c0ff', '#3f2b96'],
+  default: ['#1e3799', '#4a69bd'],
+};

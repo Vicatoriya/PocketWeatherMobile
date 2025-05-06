@@ -1,6 +1,14 @@
-import React, {useState, useRef, useEffect, useContext} from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView, Image, Animated } from 'react-native';
-import { UrlTile, Marker, Circle } from 'react-native-maps';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { UrlTile, Marker } from 'react-native-maps';
 import MapView from 'react-native-maps';
 import { useWeather } from '@/hooks/useWeather';
 import { CurrentWeatherResponse } from '@/services/weatherApi';
@@ -10,12 +18,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAir, AirQualityData } from '@/hooks/useAir';
 import { SettingsContext } from '@/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
-import FireLayer from '@/services/FireLayer';
-
-const DEFAULT_COORDS = {
-  latitude: 55.7558,
-  longitude: 37.6173,
-};
 
 const WeatherMap = () => {
   const { t } = useTranslation();
@@ -26,8 +28,38 @@ const WeatherMap = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedCoords, setSelectedCoords] = useState(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [fireModeMessageVisible, setFireModeMessageVisible] = useState(false); 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const loadMarkers = async () => {
+      try {
+        const storedMarkers = await AsyncStorage.getItem('weatherMarkers');
+        if (storedMarkers) {
+          setMarkers(JSON.parse(storedMarkers));
+        }
+      } catch (error) {
+        console.error('Failed to load markers from AsyncStorage:', error);
+      }
+    };
+
+    loadMarkers();
+  }, []);
+
+  useEffect(() => {
+    const saveMarkers = async () => {
+      try {
+        await AsyncStorage.setItem('weatherMarkers', JSON.stringify(markers));
+      } catch (error) {
+        console.error('Failed to save markers to AsyncStorage:', error);
+      }
+    };
+
+    saveMarkers();
+  }, [markers]);
+
+  const DEFAULT_COORDS = {
+    latitude: 55.7558,
+    longitude: 37.6173,
+  };
 
   const region = {
     latitude: latitude || DEFAULT_COORDS.latitude,
@@ -39,8 +71,8 @@ const WeatherMap = () => {
   const coordsString = selectedMarker
     ? `${selectedMarker.coordinates.latitude},${selectedMarker.coordinates.longitude}`
     : selectedCoords
-    ? `${selectedCoords.latitude},${selectedCoords.longitude}`
-    : '';
+      ? `${selectedCoords.latitude},${selectedCoords.longitude}`
+      : '';
 
   const { weather } = useWeather(coordsString);
   const { data } = useAir({
@@ -100,7 +132,7 @@ const WeatherMap = () => {
         coordinates: selectedCoords,
         weatherData: null,
       };
-      setMarkers(prev => [...prev, newMarker]);
+      setMarkers((prev) => [...prev, newMarker]);
       setSelectedMarker(newMarker);
       setSelectedCoords(null);
     }
@@ -108,7 +140,7 @@ const WeatherMap = () => {
 
   const handleDeleteButtonPress = () => {
     if (selectedMarker) {
-      setMarkers(prev => prev.filter(m => m.id !== selectedMarker.id));
+      setMarkers((prev) => prev.filter((m) => m.id !== selectedMarker.id));
       setSelectedMarker(null);
       setSelectedCoords(null);
       setIsPanelOpen(false);
@@ -117,18 +149,35 @@ const WeatherMap = () => {
 
   const renderWeatherPanel = () => (
     <View style={styles.panel}>
-      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
+      >
         <View style={styles.rowContainer}>
           <Text style={styles.coordsText}>
-            [{(selectedMarker?.coordinates?.latitude ?? selectedCoords?.latitude)?.toFixed(4) ?? ''},
-            {(selectedMarker?.coordinates?.longitude ?? selectedCoords?.longitude)?.toFixed(4) ?? ''}]
+            [
+            {(
+              selectedMarker?.coordinates?.latitude ?? selectedCoords?.latitude
+            )?.toFixed(4) ?? ''}
+            ,
+            {(
+              selectedMarker?.coordinates?.longitude ??
+              selectedCoords?.longitude
+            )?.toFixed(4) ?? ''}
+            ]
           </Text>
           {selectedMarker ? (
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteButtonPress}>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={handleDeleteButtonPress}
+            >
               <Text style={styles.buttonText}>{t('delete')}</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.addButton} onPress={handleAddButtonPress}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={handleAddButtonPress}
+            >
               <Text style={styles.buttonText}>{t('add')}</Text>
             </TouchableOpacity>
           )}
@@ -169,12 +218,14 @@ const WeatherMap = () => {
                   value?.v ? (
                     <View key={key}>
                       <View style={styles.parameterItem}>
-                        <Text style={styles.parameterName}>{t(`air_parameters.${key}`)}</Text>
+                        <Text style={styles.parameterName}>
+                          {t(`air_parameters.${key}`)}
+                        </Text>
                         <Text style={styles.parameterValue}>{value.v}</Text>
                       </View>
                       <View style={styles.divider} />
                     </View>
-                  ) : null
+                  ) : null,
                 )
               ) : (
                 <Text>{t('no_air_data')}</Text>
@@ -185,25 +236,6 @@ const WeatherMap = () => {
       </ScrollView>
     </View>
   );
-
-  const handleFireIconPress = () => {
-    setFireModeMessageVisible(true);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setTimeout(() => {
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          setFireModeMessageVisible(false);
-        });
-      }, 1000);
-    });
-  };
 
   return (
     <View style={styles.container}>
@@ -220,16 +252,18 @@ const WeatherMap = () => {
         </TouchableOpacity>
       </View>
 
-      <MapView  style={styles.map} 
-                region={region} 
-                onPress={handleMapPress} 
-                ref={mapRef}>
+      <MapView
+        style={styles.map}
+        region={region}
+        onPress={handleMapPress}
+        ref={mapRef}
+      >
         <UrlTile
           urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maximumZ={19}
           tileSize={256}
         />
-        {markers.map(marker => (
+        {markers.map((marker) => (
           <Marker
             coordinate={marker.coordinates}
             pinColor="#2196F3"
@@ -249,177 +283,156 @@ const WeatherMap = () => {
 
       </MapView>
 
-      {(isPanelOpen && (selectedMarker || selectedCoords)) && renderWeatherPanel()}
+      {isPanelOpen &&
+        (selectedMarker || selectedCoords) &&
+        renderWeatherPanel()}
 
       <View style={styles.attribution}>
         <Text style={styles.attributionText}>{t('osm_attribution')}</Text>
       </View>
-
-      {settings.dachaMode && (
-        <TouchableOpacity style={styles.fireIconContainer} onPress={handleFireIconPress}>
-          <Image
-            source={require('@/assets/fire.png')}
-            style={styles.fireIcon}
-          />
-        </TouchableOpacity>
-      )}
-
-      {fireModeMessageVisible && (
-        <Animated.View
-          style={[
-            styles.fireModeMessageContainer,
-            { opacity: fadeAnim }
-          ]}
-        >
-          <Text style={styles.fireModeMessageText}>Fire mode enabled</Text>
-        </Animated.View>
-      )}
-
     </View>
   );
 };
-
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    searchContainer: {
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        right: 20,
-        flexDirection: 'row',
-        zIndex: 1,
-        backgroundColor: 'white',
-        borderRadius: 8,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-    },
-    searchInput: {
-        flex: 1,
-        padding: 12,
-        fontSize: 16,
-    },
-    searchButton: {
-        padding: 12,
-        backgroundColor: '#2196F3',
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
-    },
-    searchButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    panel: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: '50%',
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        zIndex: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -5 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        elevation: 10,
-    },
-    scrollContainer: {
-        flex: 1,
-    },
-    scrollContent: {
-        padding: 20,
-        paddingTop: 25,
-        paddingBottom: 40,
-    },
-    rowContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    coordsText: {
-        fontSize: 16,
-        color: '#333',
-        fontWeight: 'bold',
-    },
-    addButton: {
-        backgroundColor: '#2196F3',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 6,
-        marginLeft: 10,
-    },
-    deleteButton: {
-        backgroundColor: '#ff4444',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 6,
-        marginLeft: 10,
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-    additionalInfo: {
-        marginTop: 20,
-    },
-    sectionTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#2196F3',
-        marginBottom: 15,
-    },
-    infoRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 12,
-    },
-    infoLabel: {
-        fontSize: 14,
-        color: '#666',
-    },
-    infoValue: {
-        fontSize: 14,
-        color: '#333',
-        fontWeight: '500',
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#2196F340',
-        marginVertical: 4,
-    },
-    attribution: {
-        position: 'absolute',
-        bottom: 10,
-        right: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        padding: 4,
-        borderRadius: 4,
-    },
-    attributionText: {
-        fontSize: 12,
-        color: '#333',
-    },
-    ecoModeMessage: {
-      backgroundColor: '#2196F31A',
-      padding: 10,
-      borderRadius: 5,
-      marginBottom: 5,
-      marginTop: 10,
-      alignItems: 'center',
+  container: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  searchContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  searchInput: {
+    flex: 1,
+    padding: 12,
+    fontSize: 16,
+  },
+  searchButton: {
+    padding: 12,
+    backgroundColor: '#2196F3',
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  searchButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  panel: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    zIndex: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+    paddingTop: 25,
+    paddingBottom: 40,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  coordsText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    marginLeft: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#ff4444',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    marginLeft: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  additionalInfo: {
+    marginTop: 20,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2196F3',
+    marginBottom: 15,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  infoLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  infoValue: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#2196F340',
+    marginVertical: 4,
+  },
+  attribution: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    padding: 4,
+    borderRadius: 4,
+  },
+  attributionText: {
+    fontSize: 12,
+    color: '#333',
+  },
+  ecoModeMessage: {
+    backgroundColor: '#2196F31A',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+    marginTop: 10,
+    alignItems: 'center',
   },
   ecoModeText: {
-      fontSize: 14,
-      color: '#2196F3',
+    fontSize: 14,
+    color: '#2196F3',
   },
   airQualitySection: {
     marginTop: 20,
@@ -440,31 +453,6 @@ const styles = StyleSheet.create({
     color: '#666',
     flex: 1,
     textAlign: 'right',
-  },
-  fireIconContainer: {
-    position: 'absolute',
-    top: 90, 
-    right: 20,
-    padding: 7,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-    borderRadius: 5,
-    zIndex: 1000,
-  },
-  fireIcon: {
-    width: 30, 
-    height: 30,
-  },
-  fireModeMessageContainer: {
-    position: 'absolute',
-    top: 92,
-    right: 80,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    padding: 10,
-    borderRadius: 5,
-    zIndex: 1001,
-  },
-  fireModeMessageText: {
-    color: 'rgba(39, 145, 245, 0.8)',
   },
 });
 
