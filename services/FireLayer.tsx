@@ -19,32 +19,33 @@ const FireLayer = ({ isActive }: { isActive: boolean }) => {
   const [fires, setFires] = useState<FireData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-useEffect(() => {
+  useEffect(() => {
     if (!isActive) return;
 
     const fetchFires = async () => {
       try {
         const date = new Date().toISOString().split('T')[0];
         const response = await fetch(
-          `https://firms.modaps.eosdis.nasa.gov/api/area/csv/2249226dc882ca2ac2957ff508d2a250/VIIRS_SNPP_NRT/-180,-90,180,90/1/${date}`
+          `https://firms.modaps.eosdis.nasa.gov/api/area/csv/2249226dc882ca2ac2957ff508d2a250/VIIRS_SNPP_NRT/-180,-90,180,90/1/${date}`,
         );
-        
+
         const text = await response.text();
-        console.log(response.status)
-        const data = text.split('\n')
+        console.log(response.status);
+        const data = text
+          .split('\n')
           .slice(1)
-          .filter(row => row.trim())
-          .map(row => {
+          .filter((row) => row.trim())
+          .map((row) => {
             const cols = row.split(',');
             return {
               latitude: parseFloat(cols[0]),
               longitude: parseFloat(cols[1]),
               frp: parseFloat(cols[12]),
-              acq_date: cols[5]
+              acq_date: cols[5],
             };
           });
-          
-        setFires(data.filter(item => !isNaN(item.latitude)));
+
+        setFires(data.filter((item) => !isNaN(item.latitude)));
       } catch (error) {
         console.error('Fire data error:', error);
       } finally {

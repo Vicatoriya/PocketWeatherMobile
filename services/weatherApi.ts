@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { fetchWeatherApi } from 'openmeteo';
 
-const WEATHER_API_KEY = 'df7b8d461e044e4da7f174958252204';
+const WEATHER_API_KEY = 'c36208302694488a82f110406250605';
 const BASE_URL = 'https://api.weatherapi.com/v1';
 const url = 'https://archive-api.open-meteo.com/v1/archive';
 

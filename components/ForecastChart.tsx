@@ -65,7 +65,6 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
             y2={y(maxTemps[i])}
             stroke="white"
             strokeWidth={2}
-            filter="url(#glow)"
           />
         ),
       )}
@@ -80,7 +79,6 @@ const ForecastChart = ({ forecast }: { forecast: ForecastDay[] }) => {
             y2={y(minTemps[i])}
             stroke="white"
             strokeWidth={2}
-            filter="url(#glow)"
           />
         ),
       )}
