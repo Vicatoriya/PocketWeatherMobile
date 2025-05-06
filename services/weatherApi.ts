@@ -60,7 +60,24 @@ export const fetchCurrentWeather = async (
     throw new Error('Не удалось получить данные о погоде');
   }
 };
-
+export const fetchCurrentWeatherByCoords = async (
+  latitude: number,
+  longitude: number,
+  lang: string = 'ru',
+): Promise<CurrentWeatherResponse> => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/current.json`, {
+      params: {
+        key: WEATHER_API_KEY,
+        q: `${latitude},${longitude}`,
+        lang,
+      },
+    });
+    return data.current;
+  } catch (error) {
+    throw new Error('Не удалось получить данные о погоде');
+  }
+};
 export const fetchForecast = async (
   city: string,
   days: number = 7,

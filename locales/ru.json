@@ -8,7 +8,9 @@
     "precip": "Осадки",
     "weekForecast": "Прогноз на неделю",
     "hourlyForecast": "Прогноз на 24 часа",
-    "historyForecast": "Последние 3 дня"
+    "historyForecast": "Последние 3 дня",
+    "savedLocations":" Сохраненные локации",
+    "currentLocation": "Текущее местоположение"
   },
   "weather": {
     "humidity": {

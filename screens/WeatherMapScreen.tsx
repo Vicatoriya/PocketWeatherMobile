@@ -29,33 +29,32 @@ const WeatherMap = () => {
   const [selectedCoords, setSelectedCoords] = useState(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
+  useEffect(() => {
+    const loadMarkers = async () => {
+      try {
+        const storedMarkers = await AsyncStorage.getItem('weatherMarkers');
+        if (storedMarkers) {
+          setMarkers(JSON.parse(storedMarkers));
+        }
+      } catch (error) {
+        console.error('Failed to load markers from AsyncStorage:', error);
+      }
+    };
 
- useEffect(() => {
-     const loadMarkers = async () => {
-         try {
-             const storedMarkers = await AsyncStorage.getItem('weatherMarkers');
-             if (storedMarkers) {
-                 setMarkers(JSON.parse(storedMarkers));
-             }
-         } catch (error) {
-             console.error('Failed to load markers from AsyncStorage:', error);
-         }
-     };
-
-     loadMarkers();
- }, []);
+    loadMarkers();
+  }, []);
 
   useEffect(() => {
-       const saveMarkers = async () => {
-           try {
-               await AsyncStorage.setItem('weatherMarkers', JSON.stringify(markers));
-           } catch (error) {
-               console.error('Failed to save markers to AsyncStorage:', error);
-           }
-       };
+    const saveMarkers = async () => {
+      try {
+        await AsyncStorage.setItem('weatherMarkers', JSON.stringify(markers));
+      } catch (error) {
+        console.error('Failed to save markers to AsyncStorage:', error);
+      }
+    };
 
-       saveMarkers();
-   }, [markers]);
+    saveMarkers();
+  }, [markers]);
 
   const DEFAULT_COORDS = {
     latitude: 55.7558,
@@ -80,7 +79,6 @@ const WeatherMap = () => {
     lat: selectedCoords?.latitude || latitude || DEFAULT_COORDS.latitude,
     lon: selectedCoords?.longitude || longitude || DEFAULT_COORDS.longitude,
   });
-
 
   const airQuality = data;
   const { settings } = useContext(SettingsContext);
