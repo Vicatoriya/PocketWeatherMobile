@@ -1,4 +1,3 @@
-// context/GradientContext.tsx
 import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import { useWeather } from '../hooks/useWeather';
 import { LocationContext } from './LocationContext';
@@ -14,19 +13,16 @@ const gradients = {
 const getGradient = (condition: string = '') => {
   const lower = condition.toLowerCase();
 
-  // Проверки для русскоязычных условий
   if (lower.includes('ясно')) return gradients.clear;
   if (lower.includes('дождь')) return gradients.rain;
   if (lower.includes('снег')) return gradients.snow;
   if (lower.includes('облач')) return gradients.cloudy;
 
-  // Проверки для англоязычных условий
   if (lower.includes('clear')) return gradients.clear;
   if (lower.includes('rain')) return gradients.rain;
   if (lower.includes('snow')) return gradients.snow;
   if (lower.includes('cloudy')) return gradients.cloudy;
 
-  // Возвращаем дефолтный градиент, если ничего не совпало
   return gradients.default;
 };
 
@@ -42,9 +38,10 @@ export const GradientProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (city) {
-      refresh(); // Обновляем погоду при изменении города
+      refresh();
     }
   }, [city]);
+
   const gradient = useMemo(() => {
     const condition = weather?.condition?.text || '';
     return getGradient(condition);

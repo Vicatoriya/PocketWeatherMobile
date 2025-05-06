@@ -49,19 +49,16 @@ function MainScreen() {
   }, [city]);
 
   const closeMenu = () => {
-    // Плавно анимируем скрытие меню
     Animated.timing(slideAnim, {
       toValue: -250,
       duration: 300,
       useNativeDriver: false,
     }).start();
-    // Обновляем состояние после анимации
     setMenuVisible(false);
   };
 
-  // Открытие меню с анимацией
   const openMenu = () => {
-    setMenuVisible(true); // Обновляем состояние на открытое меню
+    setMenuVisible(true);
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
@@ -69,7 +66,6 @@ function MainScreen() {
     }).start();
   };
 
-  // Загрузка сохранённых городов
   const loadSavedCities = async () => {
     try {
       const json = await AsyncStorage.getItem('weatherMarkers');
@@ -100,7 +96,6 @@ function MainScreen() {
     }
   };
 
-  // Обновление погоды
   const handleRefresh = async () => {
     setRefreshing(true);
     await refresh();
@@ -113,7 +108,6 @@ function MainScreen() {
     }, [i18n.language]),
   );
 
-  // Переключение меню
   const toggleMenu = () => {
     if (menuVisible) {
       closeMenu();
@@ -122,7 +116,6 @@ function MainScreen() {
     }
   };
 
-  // Обработка выбора локации
   const handleLocationSelect = (item) => {
     if (item) {
       setCustomCity({ ...item, name: item.name });
@@ -131,7 +124,7 @@ function MainScreen() {
       setCustomCity(null);
       updateLocation();
     }
-    closeMenu(); // Закрываем меню сразу после выбора города
+    closeMenu();
   };
 
   if (loading || !locationLoaded || !weather) return <LoadingIndicator />;
@@ -170,7 +163,7 @@ function MainScreen() {
           style={({ pressed }) => [
             styles.cityItem,
             pressed && styles.cityItemPressed,
-            !customCity && styles.cityItemActive, // активна, если нет кастомного города
+            !customCity && styles.cityItemActive,
           ]}
         >
           <Text style={styles.cityText}>{t('interface.currentLocation')}</Text>
@@ -179,7 +172,7 @@ function MainScreen() {
           savedCities.map((item, index) => (
             <Pressable
               key={index}
-              onPress={() => handleLocationSelect(item)} // Вызываем функцию выбора локации
+              onPress={() => handleLocationSelect(item)}
               style={({ pressed }) => [
                 styles.cityItem,
                 pressed && styles.cityItemPressed,

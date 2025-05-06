@@ -7,7 +7,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { LocationContext } from '../context/LocationContext';
 
-// Тип для универсального входа
 type CityOrCoords = string | { latitude: number; longitude: number };
 
 export const useWeather = (cityOrCoords: CityOrCoords) => {
@@ -17,7 +16,6 @@ export const useWeather = (cityOrCoords: CityOrCoords) => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
 
-  // Используем контекст для получения текущих данных о местоположении
   const { latitude, longitude, city } = useContext(LocationContext);
 
   const loadData = async (override?: CityOrCoords) => {
@@ -44,7 +42,6 @@ export const useWeather = (cityOrCoords: CityOrCoords) => {
     }
   };
 
-  // Загрузка данных при изменении cityOrCoords или при изменении данных о местоположении
   useEffect(() => {
     if (latitude && longitude) {
       loadData({
@@ -52,7 +49,7 @@ export const useWeather = (cityOrCoords: CityOrCoords) => {
         longitude,
       });
     } else if (city) {
-      loadData(city); // если локация по имени города
+      loadData(city);
     }
   }, [JSON.stringify(cityOrCoords), latitude, longitude, city]);
 
@@ -60,6 +57,6 @@ export const useWeather = (cityOrCoords: CityOrCoords) => {
     weather,
     loading,
     error,
-    refresh: loadData, // теперь refresh может принять аргумент
+    refresh: loadData,
   };
 };
