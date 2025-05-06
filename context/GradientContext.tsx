@@ -38,13 +38,13 @@ export const GradientProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { city } = useContext(LocationContext);
-  const { weather , refresh } = useWeather(city);
+  const { weather, refresh } = useWeather(city);
 
-     useEffect(() => {
-       if (city) {
-         refresh(); // Обновляем погоду при изменении города
-       }
-     }, [city]);
+  useEffect(() => {
+    if (city) {
+      refresh(); // Обновляем погоду при изменении города
+    }
+  }, [city]);
   const gradient = useMemo(() => {
     const condition = weather?.condition?.text || '';
     return getGradient(condition);

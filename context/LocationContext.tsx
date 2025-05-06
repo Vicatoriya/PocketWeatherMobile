@@ -30,7 +30,6 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
 
   const { i18n } = useTranslation();
 
-  // Универсальная функция определения текущей геолокации и названия города
   const determineCurrentLocation = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -49,9 +48,10 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
         setLongitude(lon);
 
         const response = await fetch(
-          `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&language=${i18n.language}&key=8c19fc4500d448af89913363ee5699a2`,
+          `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&language=${i18n.language}&key=163fb9c09df3410399d131efb835fd7f`,
         );
         const data = await response.json();
+        console.log(data);
 
         if (data && data.results.length > 0) {
           const comp = data.results[0].components;
@@ -76,7 +76,6 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Обновление вручную или fallback к определению текущего местоположения
   const updateLocation = (newCity?: string) => {
     if (newCity) {
       setCity(newCity);

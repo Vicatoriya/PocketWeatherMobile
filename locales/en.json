@@ -9,7 +9,7 @@
     "weekForecast": "Week forecast",
     "hourlyForecast": "24 hour forecast",
     "historyForecast": "Last 3 days",
-    "savedLocations":" Saved locations",
+    "savedLocations": " Saved locations",
     "currentLocation": "Current location"
   },
   "weather": {

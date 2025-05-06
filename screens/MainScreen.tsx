@@ -41,13 +41,12 @@ function MainScreen() {
   const [menuVisible, setMenuVisible] = useState(false);
   const slideAnim = useState(new Animated.Value(-250))[0];
   const [savedCities, setSavedCities] = useState([]);
-
   useEffect(() => {
     if (customCity || city) {
       refresh();
     }
     loadSavedCities();
-  }, [customCity, city]);
+  }, [city]);
 
   const closeMenu = () => {
     // Плавно анимируем скрытие меню
@@ -80,7 +79,7 @@ function MainScreen() {
         markers.map(async (marker) => {
           try {
             const res = await fetch(
-              `https://api.opencagedata.com/geocode/v1/json?q=${marker.coordinates.latitude}+${marker.coordinates.longitude}&language=${i18n.language}&key=8c19fc4500d448af89913363ee5699a2`,
+              `https://api.opencagedata.com/geocode/v1/json?q=${marker.coordinates.latitude}+${marker.coordinates.longitude}&language=${i18n.language}&key=163fb9c09df3410399d131efb835fd7f`,
             );
             const data = await res.json();
             const comp = data.results[0]?.components || {};
@@ -128,11 +127,10 @@ function MainScreen() {
     if (item) {
       setCustomCity({ ...item, name: item.name });
       updateLocation(item.name);
+    } else {
+      setCustomCity(null);
+      updateLocation();
     }
-    else{
-        setCustomCity(null);
-     updateLocation();
-     }
     closeMenu(); // Закрываем меню сразу после выбора города
   };
 
@@ -164,7 +162,9 @@ function MainScreen() {
       <Animated.View style={[styles.drawer, { left: slideAnim }]}>
         <Text style={styles.drawerTitle}>📍 {currentCityName}</Text>
         <View style={styles.menuDivider} />
-        <Text style={styles.sectionTitle}>🏙 {t("interface.savedLocations")}</Text>
+        <Text style={styles.sectionTitle}>
+          🏙 {t('interface.savedLocations')}
+        </Text>
         <Pressable
           onPress={() => handleLocationSelect()}
           style={({ pressed }) => [
@@ -173,9 +173,9 @@ function MainScreen() {
             !customCity && styles.cityItemActive, // активна, если нет кастомного города
           ]}
         >
-          <Text style={styles.cityText}>{t("interface.currentLocation")}</Text>
+          <Text style={styles.cityText}>{t('interface.currentLocation')}</Text>
         </Pressable>
-        {savedCities.length > 0 ? (
+        {savedCities.length > 0 &&
           savedCities.map((item, index) => (
             <Pressable
               key={index}
@@ -188,10 +188,7 @@ function MainScreen() {
             >
               <Text style={styles.cityText}>📍 {item.name}</Text>
             </Pressable>
-          ))
-        ) : (
-          <Text style={styles.menuItem}>Нет сохранённых локаций</Text>
-        )}
+          ))}
       </Animated.View>
 
       <ScrollView

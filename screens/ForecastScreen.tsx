@@ -10,20 +10,17 @@ import { getGradient } from '../utils/weatherUtils';
 import { useWeather } from '../hooks/useWeather';
 
 const ForecastScreen = ({ weatherHistory, forecast, hourlyForecast }) => {
-//   const { city, locationLoaded, updateLocation } = useContext(LocationContext);
-//   const { weather, loading, refresh } = useWeather(city || 'Москва');
-//
-//   useEffect(() => {
-//     if (city) {
-//       refresh(); // Обновляем погоду при изменении города
-//     }
-//   }, [city]);
+  //   const { city, locationLoaded, updateLocation } = useContext(LocationContext);
+  //   const { weather, loading, refresh } = useWeather(city || 'Москва');
+  //
+  //   useEffect(() => {
+  //     if (city) {
+  //       refresh(); // Обновляем погоду при изменении города
+  //     }
+  //   }, [city]);
   const gradient = useGradient();
   return (
-    <LinearGradient
-      colors={gradient}
-      style={styles.gradient}
-    >
+    <LinearGradient colors={gradient} style={styles.gradient}>
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <HourlyForecastChart hourlyForecast={hourlyForecast} />

@@ -63,7 +63,6 @@ const getGradient = (condition: string = '') => {
   return gradients.default;
 };
 
-
 const gradients = {
   clear: ['#47b2ff', '#6c8ef5'],
   cloudy: ['#5d6d7e', '#839192'],
