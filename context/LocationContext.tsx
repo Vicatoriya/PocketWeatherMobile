@@ -40,7 +40,7 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
             setLongitude(loc.coords.longitude);
 
             const response = await fetch(
-              `https://api.opencagedata.com/geocode/v1/json?q=${loc.coords.latitude}+${loc.coords.longitude}&language=${i18n.language}&key=8c19fc4500d448af89913363ee5699a2`,
+              `https://api.opencagedata.com/geocode/v1/json?q=${loc.coords.latitude}+${loc.coords.longitude}&language=${i18n.language}&key=163fb9c09df3410399d131efb835fd7f`,
             );
 
             const data = await response.json();

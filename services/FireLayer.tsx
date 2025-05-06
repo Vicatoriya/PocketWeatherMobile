@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Circle, Region } from 'react-native-maps';
+import { Circle, Region} from 'react-native-maps';
 
 type FireData = {
   latitude: number;
@@ -9,13 +9,13 @@ type FireData = {
 };
 
 interface FireLayerProps {
-  initialRegion: Region;
   isActive: boolean;
+  region: Region; 
 }
 
 const NASA_API_KEY = '2249226dc882ca2ac2957ff508d2a250';
 
-const FireLayer = ({ isActive }: { isActive: boolean }) => {
+const FireLayer = ({ isActive, region }: FireLayerProps) => {
   const [fires, setFires] = useState<FireData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,12 +25,16 @@ useEffect(() => {
     const fetchFires = async () => {
       try {
         const date = new Date().toISOString().split('T')[0];
+        const [west, south, east, north] = getBoundingBox(region);
+        const bbox = [west, south, east, north].join(',');
         const response = await fetch(
-          `https://firms.modaps.eosdis.nasa.gov/api/area/csv/2249226dc882ca2ac2957ff508d2a250/VIIRS_SNPP_NRT/-180,-90,180,90/1/${date}`
+          `https://firms.modaps.eosdis.nasa.gov/api/area/csv/2249226dc882ca2ac2957ff508d2a250/VIIRS_SNPP_NRT/23.1783,51.2623,32.7708,56.1721/3/${date}`
         );
         
         const text = await response.text();
         console.log(response.status)
+        console.log(bbox)
+        console.log(text)
         const data = text.split('\n')
           .slice(1)
           .filter(row => row.trim())
@@ -74,6 +78,28 @@ useEffect(() => {
       ))}
     </>
   );
+};
+
+const getBoundingBox = (region: Region) => {
+  const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
+  
+  const west = longitude - longitudeDelta / 2;
+  const east = longitude + longitudeDelta / 2;
+  const south = latitude - latitudeDelta / 2;
+  const north = latitude + latitudeDelta / 2;
+
+  const normalizedWest = west < -180 ? west + 360 : west;
+  const normalizedEast = east > 180 ? east - 360 : east;
+
+  const clampedSouth = Math.max(-90, south);
+  const clampedNorth = Math.min(90, north);
+
+  return [
+    normalizedWest,
+    clampedSouth,
+    normalizedEast,
+    clampedNorth
+  ];
 };
 
 export default FireLayer;
